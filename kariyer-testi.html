@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hangi Kariyer Sana Uygun? | Online Kariyer Merkezi</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1D9E75;
+    --green-dark: #0F6E56;
+    --green-light: #E1F5EE;
+    --green-mid: #9FE1CB;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 40px;
+  }
+  .topbar {
+    width: 100%;
+    max-width: 560px;
+    padding: 20px 0 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--green-dark);
+    letter-spacing: -0.3px;
+  }
+  .logo span { color: var(--text-muted); font-weight: 400; }
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .card-header { text-align: center; margin-bottom: 24px; }
+  .card-header h1 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.3; }
+  .card-header p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .progress-wrap { margin-bottom: 6px; }
+  .progress-bar { height: 5px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-mid)); border-radius: 10px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+  .progress-meta { display: flex; justify-content: space-between; margin-top: 6px; margin-bottom: 20px; }
+  .progress-meta span { font-size: 12px; color: var(--text-muted); }
+  .question { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .opt {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text);
+    text-align: left;
+    transition: all 0.18s ease;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .opt:hover { border-color: var(--green); background: var(--green-light); }
+  .opt.selected { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+  .opt-dot {
+    width: 18px; height: 18px; min-width: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    transition: all 0.18s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .opt.selected .opt-dot { border-color: var(--green); background: var(--green); }
+  .opt.selected .opt-dot::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; display: block; }
+  .nav { display: flex; justify-content: space-between; gap: 12px; }
+  .btn-back {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.18s;
+  }
+  .btn-back:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+  .btn-next {
+    background: var(--green);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    color: white;
+    flex: 1;
+    transition: all 0.18s;
+  }
+  .btn-next:hover { background: var(--green-dark); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+  .result-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 36px; }
+  .result-label { font-size: 12px; color: var(--green); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .result-name { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+  .result-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+  .runner { background: var(--bg); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+  .runner strong { color: var(--text); }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; }
+  .tag { background: var(--green-light); color: var(--green-dark); font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; }
+  .divider { height: 1px; background: var(--border); margin: 4px 0 24px; }
+  .cta-section { text-align: center; }
+  .cta-section h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .cta-section p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6; }
+  .btn-cta {
+    display: block;
+    width: 100%;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.18s;
+    margin-bottom: 12px;
+  }
+  .btn-cta:hover { background: var(--green-dark); }
+  .btn-restart {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-size: 13px;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    color: var(--text-muted);
+    width: 100%;
+    transition: all 0.18s;
+  }
+  .btn-restart:hover { border-color: var(--text-muted); color: var(--text); }
+  .footer { margin-top: 20px; font-size: 12px; color: var(--text-muted); text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Online Kariyer Merkezi <span>| Kariyer Testi</span></div>
+</div>
+
+<div class="card" id="quiz-screen">
+  <div class="card-header">
+    <h1>Hangi kariyer sana uygun? 🎯</h1>
+    <p>7 kısa soruyu yanıtla — sana en uygun mesleği bulalım.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="progress-meta">
+      <span id="step-label">Soru 1 / 7</span>
+      <span id="pct">0%</span>
+    </div>
+  </div>
+  <div class="question" id="q-text"></div>
+  <div class="options" id="opts"></div>
+  <div class="nav">
+    <button class="btn-back" id="btn-back" onclick="goBack()">← Geri</button>
+    <button class="btn-next" id="btn-next" onclick="goNext()" disabled>Devam →</button>
+  </div>
+</div>
+
+<div class="card" id="result-screen" style="display:none;">
+  <div style="text-align:center;">
+    <div class="result-icon" id="r-icon"></div>
+    <div class="result-label">Sana en uygun meslek</div>
+    <div class="result-name" id="r-name"></div>
+    <div class="result-desc" id="r-desc"></div>
+    <div class="runner" id="r-runner"></div>
+    <div class="tags" id="r-tags"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="cta-section">
+    <h3>Ücretsiz bilgi almak ister misin?</h3>
+    <p>Kurs detayları, sertifika bilgisi ve başlangıç adımları için formu doldur — seni arayalım. 📞</p>
+    <a class="btn-cta" href="https://form.jotform.com/260826441101042" target="_blank">Kayıt Formunu Doldur →</a>
+    <button class="btn-restart" onclick="restart()">Testi Tekrarla</button>
+  </div>
+</div>
+
+<div class="footer">onlinekariyer.com &nbsp;·&nbsp; Tüm hakları saklıdır</div>
+
+<script>
+const courses=[
+  {id:"aile",name:"Aile Danışmanlığı",icon:"👨‍👩‍👧",desc:"Ailelerin iletişim sorunlarını çözmelerine rehberlik etmek isteyenler için. Empati ve dinleme becerisi yüksek kişilerin parladığı bir alan.",tags:["Aile & ilişkiler","Danışmanlık","Empati odaklı"]},
+  {id:"yasam",name:"Yaşam Koçluğu",icon:"🌱",desc:"İnsanların hedef belirlemesine ve hayatlarını dönüştürmesine yardım etmek isteyenler için ideal. Motivasyon ve pozitif enerji ön planda.",tags:["Kişisel gelişim","Motivasyon","Serbest çalışma"]},
+  {id:"tibbi",name:"Tıbbi Sekreterlik",icon:"🏥",desc:"Hastane ve kliniklerde düzenli, sistematik çalışmayı sevenlere uygun. Hızlı iş bulma imkânıyla öne çıkan bir meslek.",tags:["Hastane ortamı","Düzenli iş","Hızlı iş imkânı"]},
+  {id:"ik",name:"İnsan Kaynakları",icon:"🤝",desc:"Kurumsal yapıda insanlarla çalışmayı seven, organizasyona yatkın kişiler için güçlü bir kariyer yolu.",tags:["Kurumsal kariyer","İletişim","Organizasyon"]},
+  {id:"bakim",name:"Hasta & Yaşlı Bakım",icon:"❤️",desc:"Sabır ve şefkatiyle öne çıkan, birine fiziksel destek vermekten anlam çıkaran kişiler için çok uygun.",tags:["Şefkat odaklı","Doğrudan yardım","Sürekli talep"]},
+  {id:"eczane",name:"Eczane Asistanlığı",icon:"💊",desc:"Detay odaklı, titiz ve ilaç dünyasına ilgisi olan kişiler için. Eczanelerde ve hastanelerde çalışma imkânı.",tags:["Detay & titizlik","Sağlık sektörü","Stabil çalışma"]},
+  {id:"dis",name:"Diş Hekimi Asistanlığı",icon:"🦷",desc:"Teknik becerisi güçlü, öğrenmeye açık ve klinik ortamı seven kişiler için. Özel kliniklerde yüksek talep var.",tags:["Teknik beceri","Klinik ortam","Kariyer gelişimi"]}
+];
+
+const questions=[
+  {q:"Boş zamanında en çok ne yapmaktan keyif alırsın?",opts:[{text:"İnsanların sorunlarını dinleyip çözüm üretmek",scores:{aile:3,yasam:2}},{text:"Bir şeyler öğrenmek, kendimi geliştirmek",scores:{yasam:2,ik:2,dis:1}},{text:"Düzenlemek, organize etmek, plan yapmak",scores:{tibbi:3,eczane:2,ik:1}},{text:"Birine bakım vermek, yanında olmak",scores:{bakim:3,aile:1}}]},
+  {q:"Hangi çalışma ortamı seni daha iyi tanımlıyor?",opts:[{text:"Ofis, kurumsal yapı, düzenli saatler",scores:{ik:3,tibbi:2}},{text:"Klinik, hastane, steril ortam",scores:{dis:3,eczane:2,tibbi:1}},{text:"Ev, esnek saatler — bağımsız çalışma",scores:{yasam:3,aile:2}},{text:"Saha, insan içi, her gün farklı yüzler",scores:{bakim:3,aile:1}}]},
+  {q:"Arkadaşların seni nasıl tanımlar?",opts:[{text:"Dinleyen, anlayan, sabırlı biri",scores:{aile:3,bakim:2,yasam:1}},{text:"Motive eden, ilham veren, enerjik biri",scores:{yasam:3,ik:1}},{text:"Düzenli, titiz, sistematik biri",scores:{eczane:3,tibbi:2,ik:1}},{text:"Meraklı, öğrenmeye açık, teknik zekâsı olan biri",scores:{dis:3,eczane:1}}]},
+  {q:"Hangi konuda daha fazla öğrenmek seni heyecanlandırır?",opts:[{text:"İnsan psikolojisi, aile dinamikleri",scores:{aile:3,yasam:2}},{text:"İlaçlar, hastalıklar, sağlık bilgisi",scores:{eczane:3,tibbi:1}},{text:"Diş ve ağız sağlığı, klinik uygulamalar",scores:{dis:3}},{text:"İnsan yönetimi, kurumsal süreçler",scores:{ik:3,yasam:1}}]},
+  {q:"Kariyer hedefin için hangisi daha önemli?",opts:[{text:"Hızlıca iş bulmak ve gelir elde etmek",scores:{tibbi:3,bakim:2,eczane:1}},{text:"Serbest çalışmak, kendi işimin patronu olmak",scores:{yasam:3,aile:2}},{text:"Kurumsal bir kariyer yolu inşa etmek",scores:{ik:3,tibbi:1}},{text:"İnsanlara anlamlı bir fark yaratmak",scores:{bakim:3,aile:2,yasam:1}}]},
+  {q:"Zor bir durumda nasıl tepki verirsin?",opts:[{text:"Sakin kalır, empatiyle yaklaşırım",scores:{aile:3,bakim:2}},{text:"Çözüm odaklı düşünür, hızlı aksiyon alırım",scores:{tibbi:2,ik:2,dis:1}},{text:"Detaylara inerim, en doğru yolu bulurum",scores:{eczane:3,dis:2}},{text:"İnsanları motive eder, pozitif tutarım",scores:{yasam:3,ik:1}}]},
+  {q:"Hayatında şu an hangi değişim daha yakın hissettiriyor?",opts:[{text:"Aile ve ilişkilerle ilgili bir şeyler yapmak istiyorum",scores:{aile:3}},{text:"Kendi potansiyelimi keşfetmek ve başkalarına yol göstermek",scores:{yasam:3}},{text:"Sağlık sektöründe güvenceli bir iş bulmak",scores:{tibbi:2,eczane:2,dis:2,bakim:2}},{text:"Kurumsal dünyada kendime yer açmak",scores:{ik:3}}]}
+];
+
+let current=0,answers=new Array(questions.length).fill(null);
+
+function render(){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  document.getElementById('step-label').textContent=`Soru ${current+1} / ${questions.length}`;
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('progress').style.width=pct+'%';
+  document.getElementById('q-text').textContent=q.q;
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(answers[current]===i?' selected':'');
+    btn.innerHTML=`<span class="opt-dot"></span>${o.text}`;
+    btn.onclick=()=>selectOpt(i);
+    opts.appendChild(btn);
+  });
+  document.getElementById('btn-back').disabled=current===0;
+  document.getElementById('btn-next').disabled=answers[current]===null;
+  document.getElementById('btn-next').textContent=current===questions.length-1?'Sonucu Gör →':'Devam →';
+}
+
+function selectOpt(i){
+  answers[current]=i;
+  document.querySelectorAll('.opt').forEach((b,idx)=>b.className='opt'+(idx===i?' selected':''));
+  document.getElementById('btn-next').disabled=false;
+}
+
+function goNext(){
+  if(current<questions.length-1){current++;render();}
+  else showResult();
+}
+
+function goBack(){if(current>0){current--;render();}}
+
+function showResult(){
+  const totals={};
+  courses.forEach(c=>totals[c.id]=0);
+  answers.forEach((a,qi)=>{
+    if(a===null)return;
+    const sc=questions[qi].opts[a].scores;
+    Object.keys(sc).forEach(k=>totals[k]=(totals[k]||0)+sc[k]);
+  });
+  const sorted=courses.slice().sort((a,b)=>totals[b.id]-totals[a.id]);
+  const top=sorted[0],second=sorted[1];
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('result-screen').style.display='block';
+  document.getElementById('r-icon').textContent=top.icon;
+  document.getElementById('r-name').textContent=top.name;
+  document.getElementById('r-desc').textContent=top.desc;
+  document.getElementById('r-runner').innerHTML=`Ayrıca sana yakın çıkan meslek: <strong>${second.icon} ${second.name}</strong>`;
+  const tags=document.getElementById('r-tags');
+  tags.innerHTML='';
+  top.tags.forEach(t=>{const s=document.createElement('span');s.className='tag';s.textContent=t;tags.appendChild(s);});
+}
+
+function restart(){
+  current=0;answers=new Array(questions.length).fill(null);
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
