@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Öğrenci Ön Değerlendirme | Online Kariyer Merkezi</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:#f9fafb;color:#1a1a1a;min-height:100vh;padding:16px 16px 40px;}
+.wrap{max-width:560px;margin:0 auto;}
+.topbar{text-align:center;padding:20px 0 16px;}
+.logo{font-size:15px;font-weight:600;color:#0F6E56;}
+.logo span{color:#6b7280;font-weight:400;}
+.card{background:white;border-radius:14px;border:1px solid #e5e7eb;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.card h2{font-size:18px;font-weight:600;color:#1a1a1a;margin-bottom:6px;}
+.card p{font-size:13px;color:#6b7280;margin-bottom:1.25rem;line-height:1.6;}
+.sec{font-size:11px;font-weight:600;color:#1D9E75;letter-spacing:1px;text-transform:uppercase;margin:16px 0 10px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:13px;color:#6b7280;margin-bottom:5px;}
+.field input[type=text],.field input[type=tel],.field select,.field textarea{width:100%;font-size:14px;color:#1a1a1a;background:white;border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;outline:none;transition:border-color 0.15s;-webkit-appearance:none;}
+.field input[type=text]:focus,.field input[type=tel]:focus,.field select:focus,.field textarea:focus{border-color:#1D9E75;}
+.field textarea{height:70px;resize:none;}
+
+/* Native radio - görsel olarak styled */
+.radio-group{display:flex;flex-direction:column;gap:8px;}
+.radio-label{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:14px;color:#1a1a1a;transition:all 0.15s;line-height:1.4;}
+.radio-label:hover{border-color:#1D9E75;background:#E1F5EE;}
+.radio-label input[type=radio]{accent-color:#1D9E75;width:17px;height:17px;min-width:17px;cursor:pointer;}
+.radio-label:has(input:checked){border-color:#1D9E75;background:#E1F5EE;color:#0F6E56;}
+
+.err{font-size:12px;color:#E24B4A;margin-top:4px;display:none;}
+.btn{background:#1D9E75;color:white;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;width:100%;margin-top:8px;transition:background 0.15s;}
+.btn:hover{background:#0F6E56;}
+.result{display:none;}
+.r-header{font-size:20px;font-weight:600;margin-bottom:4px;}
+.r-sub{font-size:13px;color:#6b7280;margin-bottom:1rem;}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0;}
+.score-box{background:#f9fafb;border-radius:10px;padding:12px;text-align:center;}
+.score-box .num{font-size:24px;font-weight:600;}
+.score-box .lbl{font-size:11px;color:#6b7280;margin-top:3px;}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f3f4f6;font-size:13px;}
+.result-row:last-child{border-bottom:none;}
+.badge{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500;}
+.b-ok{background:#E1F5EE;color:#0F6E56;}
+.b-warn{background:#FAEEDA;color:#633806;}
+.b-risk{background:#FCEBEB;color:#791F1F;}
+.tavsiye{background:#f9fafb;border-radius:10px;padding:14px;margin-top:1rem;font-size:13px;color:#6b7280;line-height:1.7;}
+.tavsiye strong{color:#1a1a1a;}
+.btn-reset{background:transparent;border:1px solid #e5e7eb;border-radius:8px;padding:12px;font-size:14px;font-family:'Outfit',sans-serif;cursor:pointer;color:#6b7280;width:100%;margin-top:10px;transition:all 0.15s;}
+.btn-reset:hover{border-color:#6b7280;color:#1a1a1a;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">Online Kariyer Merkezi <span>| Öğrenci Değerlendirme</span></div>
+  </div>
+
+  <div class="card" id="form-card">
+    <h2>Öğrenci Ön Değerlendirme</h2>
+    <p>Kayıt öncesi öğrencinin uygunluğunu ölçmek için doldurun.</p>
+
+    <div class="sec">Kişisel Bilgiler</div>
+    <div class="field">
+      <label>Ad Soyad</label>
+      <input type="text" id="name" placeholder="Ad soyad">
+      <div class="err" id="e-name">Zorunlu alan</div>
+    </div>
+    <div class="field">
+      <label>Telefon</label>
+      <input type="tel" id="phone" placeholder="05XX XXX XX XX">
+      <div class="err" id="e-phone">Geçerli numara girin</div>
+    </div>
+    <div class="field">
+      <label>Yaş aralığı</label>
+      <select id="yas"><option value="">Seçin...</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46+</option></select>
+      <div class="err" id="e-yas">Seçin</div>
+    </div>
+    <div class="field">
+      <label>Eğitim durumu</label>
+      <select id="egitim"><option value="">Seçin...</option><option>İlkokul / Ortaokul</option><option>Lise</option><option>Ön lisans</option><option>Lisans ve üzeri</option></select>
+      <div class="err" id="e-egitim">Seçin</div>
+    </div>
+    <div class="field">
+      <label>İlgilendiği kurs</label>
+      <select id="kurs" onchange="kursSecildi()">
+        <option value="">Seçin...</option>
+        <option>Tıbbi Sekreterlik</option>
+        <option>Diş Hekimi Asistanlığı</option>
+        <option>Eczane Asistanlığı</option>
+        <option>Hasta & Yaşlı Bakım</option>
+        <option>Aile Danışmanlığı</option>
+        <option>Yaşam Koçluğu</option>
+        <option>İnsan Kaynakları</option>
+      </select>
+      <div class="err" id="e-kurs">Seçin</div>
+    </div>
+
+    <div class="sec">Genel Yetkinlik</div>
+
+    <div class="field">
+      <label>Bilgisayar kullanım seviyesi</label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="bilgisayar" value="0">Hiç bilmiyorum</label>
+        <label class="radio-label"><input type="radio" name="bilgisayar" value="1">Temel düzeyde biliyorum</label>
+        <label class="radio-label"><input type="radio" name="bilgisayar" value="2">İyi seviyede kullanıyorum</label>
+      </div>
+      <div class="err" id="e-bilgisayar">Seçin</div>
+    </div>
+
+    <div class="field">
+      <label>İletişim ve kendini ifade etme</label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="iletisim" value="0">Zorlanıyorum / Çekiniyorum</label>
+        <label class="radio-label"><input type="radio" name="iletisim" value="1">Duruma göre değişiyor</label>
+        <label class="radio-label"><input type="radio" name="iletisim" value="2">Rahat ve güçlüyüm</label>
+      </div>
+      <div class="err" id="e-iletisim">Seçin</div>
+    </div>
+
+    <div class="field">
+      <label>Sabır ve empati</label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="empati" value="0">Sabırsız ve duygusal tepkiler verebiliyorum</label>
+        <label class="radio-label"><input type="radio" name="empati" value="1">Orta düzeyde sabırlıyım</label>
+        <label class="radio-label"><input type="radio" name="empati" value="2">Çok sabırlı ve empatik biriyim</label>
+      </div>
+      <div class="err" id="e-empati">Seçin</div>
+    </div>
+
+    <div class="field">
+      <label>Eğitime haftalık ayırabileceği zaman</label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="zaman" value="0">Haftada 1-2 saat</label>
+        <label class="radio-label"><input type="radio" name="zaman" value="1">Haftada 3-5 saat</label>
+        <label class="radio-label"><input type="radio" name="zaman" value="2">Her gün düzenli çalışabilirim</label>
+      </div>
+      <div class="err" id="e-zaman">Seçin</div>
+    </div>
+
+    <div class="field">
+      <label>Kariyer motivasyonu</label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="motivasyon" value="0">Sadece sertifika almak istiyorum</label>
+        <label class="radio-label"><input type="radio" name="motivasyon" value="1">İş bulmak için ihtiyacım var</label>
+        <label class="radio-label"><input type="radio" name="motivasyon" value="2">Bu alanda kariyer yapmak istiyorum</label>
+      </div>
+      <div class="err" id="e-motivasyon">Seçin</div>
+    </div>
+
+    <div id="meslek-sorular"></div>
+
+    <div class="field" style="margin-top:8px;">
+      <label>Ek not (isteğe bağlı)</label>
+      <textarea id="not" placeholder="Öğrenci hakkında notunuz..."></textarea>
+    </div>
+    <button class="btn" onclick="gonder()">Değerlendirmeyi Tamamla</button>
+  </div>
+
+  <div class="card result" id="result-card">
+    <div class="r-header" id="r-baslik"></div>
+    <div class="r-sub" id="r-sub"></div>
+    <div class="score-grid">
+      <div class="score-box"><div class="num" id="r-hazir" style="color:#1D9E75"></div><div class="lbl">Hazır</div></div>
+      <div class="score-box"><div class="num" id="r-gelistir" style="color:#BA7517"></div><div class="lbl">Geliştirilmeli</div></div>
+      <div class="score-box"><div class="num" id="r-riskli" style="color:#E24B4A"></div><div class="lbl">Riskli</div></div>
+    </div>
+    <div id="r-detay"></div>
+    <div class="tavsiye" id="r-tavsiye"></div>
+    <button class="btn-reset" onclick="sifirla()">Yeni Değerlendirme</button>
+  </div>
+</div>
+
+<script>
+const meslekSorular={
+  'Tıbbi Sekreterlik':[
+    {key:'word',label:'Microsoft Word bilgisi',opts:['Bilmiyorum','Temel düzeyde','Rahatça kullanıyorum']},
+    {key:'excel',label:'Microsoft Excel bilgisi',opts:['Bilmiyorum','Temel düzeyde','Rahatça kullanıyorum']},
+    {key:'diksiyon',label:'Diksiyon / konuşma becerisi',opts:['Zayıf / Anlaşılmaz konuşuyorum','Orta düzeyde','Akıcı ve düzgün konuşuyorum']},
+  ],
+  'Diş Hekimi Asistanlığı':[
+    {key:'kan',label:'Kan veya tıbbi görüntüler karşısında',opts:['Bayılma/panik yaşayabilirim','Biraz rahatsız olurum ama idare ederim','Hiç sorun yaşamam']},
+    {key:'fizik',label:'Uzun süre ayakta durabilir mi?',opts:['Hayır, zorlanırım','Orta süre idare ederim','Evet, sorun olmaz']},
+    {key:'detay',label:'Detaylara dikkat etme becerisi',opts:['Dikkatsiz ve aceleci olabilirim','Orta düzeyde dikkatli','Çok detaycı ve titiz biriyim']},
+  ],
+  'Eczane Asistanlığı':[
+    {key:'mat',label:'Temel matematik / hesap yapma',opts:['Zorlanıyorum','Temel düzeyde yapabiliyorum','Rahatça yapabiliyorum']},
+    {key:'dikkat',label:'Dikkatli ve titiz çalışma',opts:['Aceleci olabilirim','Orta düzeyde dikkatli','Çok dikkatli ve titizim']},
+    {key:'ilac',label:'İlaç / sağlık konularına ilgi',opts:['İlgim yok','Biraz ilgiliyim','Çok ilgiliyim']},
+  ],
+  'Hasta & Yaşlı Bakım':[
+    {key:'fiz2',label:'Fiziksel güç gerektiren işlerde',opts:['Zorlanırım','Orta düzeyde yapabilirim','Rahatlıkla yapabilirim']},
+    {key:'koku',label:'Tıbbi / bakım ortamı kokuları karşısında',opts:['Çok rahatsız olurum','Biraz alışmam gerekir','Hiç sorun olmaz']},
+    {key:'yasli',label:'Yaşlı veya hasta bireylerle vakit geçirmek',opts:['Zorlanıyorum','Duruma göre değişiyor','Severek yapıyorum']},
+  ],
+  'Aile Danışmanlığı':[
+    {key:'psiko',label:'Psikoloji veya insan davranışlarına ilgi',opts:['İlgim yok','Biraz ilgiliyim','Çok meraklıyım']},
+    {key:'gizli',label:'Paylaşılan sırları saklama konusunda',opts:['Zorlanabilirim','Genellikle saklarım','Kesinlikle saklarım']},
+    {key:'taraf',label:'Tarafsız kalabilme becerisi',opts:['Duygusal tepkiler verebilirim','Genellikle tarafsız kalırım','Her zaman tarafsızım']},
+  ],
+  'Yaşam Koçluğu':[
+    {key:'ikna',label:'İnsanları ikna etme ve motive etme',opts:['Zayıf','Orta düzeyde','Çok güçlüyüm']},
+    {key:'hedef',label:'Kendi hayatında hedef belirleme ve uygulama',opts:['Pek yapamıyorum','Bazen yapıyorum','Sürekli yapıyorum']},
+    {key:'dinle',label:'Aktif dinleme becerisi',opts:['Sabırsız dinlerim','Orta düzeyde dinlerim','Çok iyi dinlerim']},
+  ],
+  'İnsan Kaynakları':[
+    {key:'word2',label:'Microsoft Word / Excel',opts:['Bilmiyorum','Temel düzeyde','Rahatça kullanıyorum']},
+    {key:'org',label:'Organizasyon ve planlama becerisi',opts:['Dağınık ve plansızım','Orta düzeyde','Çok organizeyim']},
+    {key:'gizli2',label:'Personel bilgilerini gizli tutma',opts:['Zorlanabilirim','Genellikle saklarım','Kesinlikle saklarım']},
+  ],
+};
+
+function getRadio(name){
+  const sel=document.querySelector(`input[name="${name}"]:checked`);
+  return sel?parseInt(sel.value):-1;
+}
+
+function kursSecildi(){
+  const kurs=document.getElementById('kurs').value;
+  const c=document.getElementById('meslek-sorular');
+  c.innerHTML='';
+  if(!kurs||!meslekSorular[kurs])return;
+  const t=document.createElement('div');
+  t.className='sec';t.style.marginTop='8px';
+  t.textContent=kurs+' - Özel Sorular';
+  c.appendChild(t);
+  meslekSorular[kurs].forEach(s=>{
+    const f=document.createElement('div');
+    f.className='field';
+    f.innerHTML=`<label>${s.label}</label><div class="radio-group">${
+      s.opts.map((o,i)=>`<label class="radio-label"><input type="radio" name="${s.key}" value="${i}">${o}</label>`).join('')
+    }</div><div class="err" id="e-${s.key}">Seçin</div>`;
+    c.appendChild(f);
+  });
+}
+
+function gonder(){
+  let valid=true;
+  document.querySelectorAll('.err').forEach(e=>e.style.display='none');
+  const name=document.getElementById('name').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const yas=document.getElementById('yas').value;
+  const egitim=document.getElementById('egitim').value;
+  const kurs=document.getElementById('kurs').value;
+
+  if(!name){document.getElementById('e-name').style.display='block';valid=false;}
+  if(!phone||phone.length<10){document.getElementById('e-phone').style.display='block';valid=false;}
+  if(!yas){document.getElementById('e-yas').style.display='block';valid=false;}
+  if(!egitim){document.getElementById('e-egitim').style.display='block';valid=false;}
+  if(!kurs){document.getElementById('e-kurs').style.display='block';valid=false;}
+
+  const baseKeys=['bilgisayar','iletisim','empati','zaman','motivasyon'];
+  baseKeys.forEach(k=>{
+    if(getRadio(k)===-1){document.getElementById('e-'+k).style.display='block';valid=false;}
+  });
+
+  if(kurs&&meslekSorular[kurs]){
+    meslekSorular[kurs].forEach(s=>{
+      if(getRadio(s.key)===-1){
+        const e=document.getElementById('e-'+s.key);
+        if(e)e.style.display='block';
+        valid=false;
+      }
+    });
+  }
+  if(!valid)return;
+
+  const score={hazir:0,gelistir:0,riskli:0};
+  const detaylar=[];
+
+  function deg(key,label){
+    const v=getRadio(key);
+    if(v===2){score.hazir++;detaylar.push({l:label,d:'ok',t:'Hazır'});}
+    else if(v===1){score.gelistir++;detaylar.push({l:label,d:'warn',t:'Geliştirilmeli'});}
+    else{score.riskli++;detaylar.push({l:label,d:'risk',t:'Riskli'});}
+  }
+
+  deg('bilgisayar','Bilgisayar');
+  deg('iletisim','İletişim');
+  deg('empati','Empati/Sabır');
+  deg('zaman','Zaman');
+  deg('motivasyon','Motivasyon');
+
+  if(kurs&&meslekSorular[kurs]){
+    meslekSorular[kurs].forEach(s=>{
+      deg(s.key,s.label);
+    });
+  }
+
+  let genel,renk,tavsiye;
+  if(score.riskli>=3){
+    genel='Kayıt Önerilmez';renk='#E24B4A';
+    tavsiye='<strong>Dikkat:</strong> Birden fazla kritik alanda eksiklik var. Kayıt öncesinde öğrenciyle detaylı görüşme yapılması önerilir.';
+  }else if(score.riskli>=1||score.gelistir>=3){
+    genel='Geliştirilmesi Gereken Alanlar Var';renk='#BA7517';
+    tavsiye='<strong>Öneri:</strong> Öğrenci kayda alınabilir ancak riskli alanlar hakkında önceden bilgilendirilmeli. Eğitim sürecinde takip edilmeli.';
+  }else{
+    genel='Kayda Hazır';renk='#1D9E75';
+    tavsiye='<strong>Sonuç:</strong> Öğrenci bu kurs için uygun. Kayıt işlemi başlatılabilir.';
+  }
+
+  document.getElementById('r-baslik').textContent=name+' — '+kurs;
+  document.getElementById('r-baslik').style.color=renk;
+  document.getElementById('r-sub').textContent=yas+' yaş | '+egitim+' | '+genel;
+  document.getElementById('r-hazir').textContent=score.hazir;
+  document.getElementById('r-gelistir').textContent=score.gelistir;
+  document.getElementById('r-riskli').textContent=score.riskli;
+  document.getElementById('r-tavsiye').innerHTML=tavsiye;
+
+  const det=document.getElementById('r-detay');
+  det.innerHTML='';
+  detaylar.forEach(d=>{
+    const row=document.createElement('div');
+    row.className='result-row';
+    row.innerHTML=`<span>${d.l}</span><span class="badge ${d.d==='ok'?'b-ok':d.d==='warn'?'b-warn':'b-risk'}">${d.t}</span>`;
+    det.appendChild(row);
+  });
+
+  document.getElementById('form-card').style.display='none';
+  document.getElementById('result-card').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function sifirla(){
+  document.getElementById('form-card').style.display='block';
+  document.getElementById('result-card').style.display='none';
+  document.getElementById('name').value='';
+  document.getElementById('phone').value='';
+  document.getElementById('yas').value='';
+  document.getElementById('egitim').value='';
+  document.getElementById('kurs').value='';
+  document.getElementById('not').value='';
+  document.getElementById('meslek-sorular').innerHTML='';
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.err').forEach(e=>e.style.display='none');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
